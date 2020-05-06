@@ -223,7 +223,7 @@ resource "aws_codebuild_project" "ggjam_frontend" {
     buildspec = templatefile("templates/gatsby.yml.tpl", {
       artifacts_bucket = aws_s3_bucket.ggjam-website.bucket
       ghost_api_key = var.ghost_api_key
-      ghost_url = "http://${aws_service_discovery_service.ghost.name}.${aws_service_discovery_private_dns_namespace.ggjam.name}"
+      ghost_url = "${aws_service_discovery_service.ghost.name}.${aws_service_discovery_private_dns_namespace.ggjam.name}"
       ghost_port = var.ghost_port 
     })
   }
