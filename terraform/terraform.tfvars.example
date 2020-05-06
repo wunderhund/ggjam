@@ -1,0 +1,6 @@
+ghostdb_pass = "ghostpass"
+jumpbox_access = ["0.0.0.0/0"]
+jumpbox_key = "<SSH Public Key"
+github_personal_token = "<github oauth token>"
+ghost_api_key = "<ghost api key>"
+ghost_port = "2368"
