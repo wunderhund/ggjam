@@ -1,5 +1,5 @@
 variable "region" {
-  type = string
+  type    = string
   default = "us-west-2"
 }
 
@@ -11,7 +11,7 @@ variable "base_tags" {
 }
 
 variable "ghostdb_user" {
-  type = string
+  type    = string
   default = "ghost"
 }
 
@@ -36,6 +36,6 @@ variable "ghost_api_key" {
 }
 
 variable "ghost_port" {
-  type = string
+  type    = string
   default = "2368"
 }

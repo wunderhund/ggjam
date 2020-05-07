@@ -7,7 +7,7 @@ phases:
       - cat /etc/*release*
       - apt-get install -y git curl jq
       - npm install -g gatsby-cli
-      - gatsby new gatsby-starter-ghost https://github.com/wunderhund/gatsby-starter-ghost.git
+      - gatsby new gatsby-starter-ghost https://github.com/TryGhost/gatsby-starter-ghost.git
       - cd gatsby-starter-ghost && yarn
       - contents="$(jq '.production.apiUrl = "http://${ghost_url}:${ghost_port}"' gatsby-starter-ghost/.ghost.json)" && echo $contents | jq '.' > gatsby-starter-ghost/.ghost.json
       - contents="$(jq '.production.contentApiKey = "${ghost_api_key}"' gatsby-starter-ghost/.ghost.json)" && echo $contents | jq '.' > gatsby-starter-ghost/.ghost.json

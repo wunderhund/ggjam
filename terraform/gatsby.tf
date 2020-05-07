@@ -110,7 +110,7 @@ data "aws_iam_policy_document" "ggjam-website-build-policy" {
     condition {
       test     = "StringEquals"
       variable = "ec2:Subnet"
-      values = [aws_subnet.private-a.arn, aws_subnet.private-b.arn]
+      values   = [aws_subnet.private-a.arn, aws_subnet.private-b.arn]
     }
 
     condition {
@@ -173,7 +173,7 @@ resource "aws_security_group" "gatsby" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge (
+  tags = merge(
     {
       Name = "gatsby"
     },
@@ -188,7 +188,7 @@ resource "aws_codebuild_project" "ggjam_frontend" {
   service_role  = aws_iam_role.ggjam-website-build.arn
 
   artifacts {
-    type = "S3"
+    type     = "S3"
     location = aws_s3_bucket.ggjam-website.bucket
   }
 
@@ -217,14 +217,17 @@ resource "aws_codebuild_project" "ggjam_frontend" {
   }
 
   source {
-    type = "GITHUB"
-    location = "https://github.com/wunderhund/gatsby-starter-ghost"
+    type                = "GITHUB"
+    location            = "https://github.com/wunderhund/gatsby-starter-ghost"
+    git_clone_depth     = 0
+    insecure_ssl        = false
+    report_build_status = false
 
     buildspec = templatefile("templates/gatsby.yml.tpl", {
       artifacts_bucket = aws_s3_bucket.ggjam-website.bucket
-      ghost_api_key = var.ghost_api_key
-      ghost_url = "${aws_service_discovery_service.ghost.name}.${aws_service_discovery_private_dns_namespace.ggjam.name}"
-      ghost_port = var.ghost_port 
+      ghost_api_key    = var.ghost_api_key
+      ghost_url        = "${aws_service_discovery_service.ghost.name}.${aws_service_discovery_private_dns_namespace.ggjam.name}"
+      ghost_port       = var.ghost_port
     })
   }
 
@@ -246,8 +249,8 @@ resource "aws_codebuild_webhook" "ggjam_build" {
   project_name = aws_codebuild_project.ggjam_frontend.name
   filter_group {
     filter {
-      type = "EVENT"
-      pattern = "PUSH" 
+      type    = "EVENT"
+      pattern = "PUSH"
     }
   }
 }

@@ -4,18 +4,18 @@ resource "aws_security_group" "ghost" {
   vpc_id      = aws_vpc.ggjam.id
 
   ingress {
-    description = "SSH Access to Ghost container"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    description     = "SSH Access to Ghost container"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
     security_groups = [aws_security_group.jumpbox.id]
   }
 
-ingress {
-    description = "HTTP access to Ghost container"
-    from_port   = var.ghost_port
-    to_port     = var.ghost_port
-    protocol    = "tcp"
+  ingress {
+    description     = "HTTP access to Ghost container"
+    from_port       = var.ghost_port
+    to_port         = var.ghost_port
+    protocol        = "tcp"
     security_groups = [aws_security_group.gatsby.id, aws_security_group.jumpbox.id]
   }
 
@@ -26,7 +26,7 @@ ingress {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge (
+  tags = merge(
     {
       Name = "ghost"
     },
@@ -35,10 +35,10 @@ ingress {
 }
 
 resource "aws_ecs_cluster" "ghost" {
-  name = "ghost"
+  name               = "ghost"
   capacity_providers = ["FARGATE"]
 
-  tags = merge (
+  tags = merge(
     {
       Name = "ghost"
     },
@@ -47,8 +47,8 @@ resource "aws_ecs_cluster" "ghost" {
 }
 
 resource "aws_iam_role" "ghost" {
-    name = "ghost"
-    assume_role_policy = <<EOF
+  name               = "ghost"
+  assume_role_policy = <<EOF
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -66,21 +66,29 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "ghost" {
-    role = aws_iam_role.ghost.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+  role       = aws_iam_role.ghost.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_cloudwatch_log_group" "ghost_cloudwatch" {
+  name = "/ecs/ggjam-ghost"
 }
 
 resource "aws_ecs_task_definition" "ghost" {
-  family = "ghost"
-  task_role_arn = aws_iam_role.ghost.arn
-  execution_role_arn = aws_iam_role.ghost.arn
-  network_mode = "awsvpc"
+  family                   = "ghost"
+  task_role_arn            = aws_iam_role.ghost.arn
+  execution_role_arn       = aws_iam_role.ghost.arn
+  network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  memory = "2048"
-  cpu = "1024"
+  memory                   = "2048"
+  cpu                      = "1024"
   container_definitions = templatefile("templates/ghost.json.tpl", {
-      host = aws_db_instance.ghost.endpoint
-      port = var.ghost_port
+    host      = aws_db_instance.ghost.address
+    port      = var.ghost_port
+    user      = var.ghostdb_user
+    pass      = var.ghostdb_pass
+    log_group = aws_cloudwatch_log_group.ghost_cloudwatch.name
+    region    = data.aws_region.current.name
   })
 }
 
@@ -91,16 +99,16 @@ resource "aws_ecs_service" "ghost" {
   desired_count   = 1
   launch_type     = "FARGATE"
   network_configuration {
-      subnets = [aws_subnet.private-a.id, aws_subnet.private-b.id]
-      security_groups = [aws_security_group.ghost.id]
+    subnets         = [aws_subnet.private-a.id, aws_subnet.private-b.id]
+    security_groups = [aws_security_group.ghost.id]
   }
   deployment_controller {
-      type = "ECS"
+    type = "ECS"
   }
 
   service_registries {
-      registry_arn = aws_service_discovery_service.ghost.arn
-      container_name = "ghost"
+    registry_arn   = aws_service_discovery_service.ghost.arn
+    container_name = "ghost"
   }
 
 }

@@ -1,16 +1,18 @@
 resource "aws_db_instance" "ghost" {
-  allocated_storage    = 20
-  storage_type         = "gp2"
-  engine               = "mariadb"
-  engine_version       = "10.3"
-  instance_class       = "db.t2.micro"
-  name                 = "ghostdb"
-  username             = "ghost"
-  password             = var.ghostdb_pass
-  db_subnet_group_name = aws_db_subnet_group.ghost-db.name
-  vpc_security_group_ids = [aws_security_group.ghost-db.id]
+  identifier                = "ghostdb"
+  allocated_storage         = 20
+  storage_type              = "gp2"
+  engine                    = "mariadb"
+  engine_version            = "10.3"
+  instance_class            = "db.t2.micro"
+  name                      = "ghostdb"
+  username                  = var.ghostdb_user
+  password                  = var.ghostdb_pass
+  db_subnet_group_name      = aws_db_subnet_group.ghost-db.name
+  vpc_security_group_ids    = [aws_security_group.ghost-db.id]
+  final_snapshot_identifier = "mariadb-final"
 
-  tags = merge (
+  tags = merge(
     {
       Name = "ggjam-igw"
     },
@@ -22,7 +24,7 @@ resource "aws_db_subnet_group" "ghost-db" {
   name       = "ghost"
   subnet_ids = ["${aws_subnet.private-a.id}", "${aws_subnet.private-b.id}"]
 
-  tags = merge (
+  tags = merge(
     {
       Name = "ghost"
     },
@@ -36,10 +38,10 @@ resource "aws_security_group" "ghost-db" {
   vpc_id      = aws_vpc.ggjam.id
 
   ingress {
-    description = "Access to MariaDB"
-    from_port   = 3306
-    to_port     = 3306
-    protocol    = "tcp"
+    description     = "Access to MariaDB"
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
     security_groups = [aws_security_group.ghost.id, aws_security_group.jumpbox.id]
   }
 
@@ -50,7 +52,7 @@ resource "aws_security_group" "ghost-db" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = merge (
+  tags = merge(
     {
       Name = "ghost-db"
     },

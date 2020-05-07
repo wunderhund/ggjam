@@ -1,8 +1,8 @@
 resource "aws_vpc" "ggjam" {
-  cidr_block = "10.0.0.0/16"
+  cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
-  
-  tags = merge (
+
+  tags = merge(
     {
       Name = "ggjam"
     },
@@ -11,10 +11,10 @@ resource "aws_vpc" "ggjam" {
 }
 
 resource "aws_vpc_dhcp_options" "ggjam" {
-  domain_name          = "ggjam"
-  domain_name_servers  = ["10.0.0.2"]
+  domain_name         = "ggjam"
+  domain_name_servers = ["10.0.0.2"]
 
-  tags = merge (
+  tags = merge(
     {
       Name = "ggjam"
     },
@@ -30,7 +30,7 @@ resource "aws_vpc_dhcp_options_association" "ggjam" {
 resource "aws_internet_gateway" "ggjam-igw" {
   vpc_id = aws_vpc.ggjam.id
 
-  tags = merge (
+  tags = merge(
     {
       Name = "ggjam-igw"
     },
@@ -39,11 +39,11 @@ resource "aws_internet_gateway" "ggjam-igw" {
 }
 
 resource "aws_subnet" "public-a" {
-  vpc_id     = aws_vpc.ggjam.id
-  cidr_block = "10.0.1.0/24"
+  vpc_id                  = aws_vpc.ggjam.id
+  cidr_block              = "10.0.1.0/24"
   map_public_ip_on_launch = true
 
-  tags = merge (
+  tags = merge(
     {
       Name = "public-a"
     },
@@ -52,11 +52,11 @@ resource "aws_subnet" "public-a" {
 }
 
 resource "aws_subnet" "public-b" {
-  vpc_id     = aws_vpc.ggjam.id
-  cidr_block = "10.0.2.0/24"
+  vpc_id                  = aws_vpc.ggjam.id
+  cidr_block              = "10.0.2.0/24"
   map_public_ip_on_launch = true
 
-  tags = merge (
+  tags = merge(
     {
       Name = "public-b"
     },
@@ -65,9 +65,9 @@ resource "aws_subnet" "public-b" {
 }
 
 resource "aws_eip" "nat-eip" {
-  vpc      = true
+  vpc = true
 
-  tags = merge (
+  tags = merge(
     {
       Name = "nat-eip"
     },
@@ -78,8 +78,8 @@ resource "aws_eip" "nat-eip" {
 resource "aws_nat_gateway" "ngw" {
   allocation_id = aws_eip.nat-eip.id
   subnet_id     = aws_subnet.public-a.id
-  
-  tags = merge (
+
+  tags = merge(
     {
       Name = "nat-eip"
     },
@@ -91,7 +91,7 @@ resource "aws_subnet" "private-a" {
   vpc_id     = aws_vpc.ggjam.id
   cidr_block = "10.0.3.0/24"
 
-  tags = merge (
+  tags = merge(
     {
       Name = "private-a"
     },
@@ -103,7 +103,7 @@ resource "aws_subnet" "private-b" {
   vpc_id     = aws_vpc.ggjam.id
   cidr_block = "10.0.4.0/24"
 
-  tags = merge (
+  tags = merge(
     {
       Name = "private-b"
     },
@@ -119,7 +119,7 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.ggjam-igw.id
   }
 
-  tags = merge (
+  tags = merge(
     {
       Name = "public-rt"
     },
@@ -131,10 +131,10 @@ resource "aws_route_table" "private" {
   vpc_id = aws_vpc.ggjam.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.ngw.id
   }
-  tags = merge (
+  tags = merge(
     {
       Name = "private-rt"
     },
