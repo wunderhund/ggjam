@@ -65,6 +65,30 @@ resource "aws_iam_role" "ghost" {
 EOF
 }
 
+data "aws_iam_policy_document" "ghost-api-invoke" {
+  statement {
+    actions = [
+      "execute-api:Invoke"
+    ]
+
+    resources = [
+      "arn:aws:execute-api:us-west-2:925412914118:9xygkt8j2a/*"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "ghost-api-invoke" {
+  name        = "ghost-api-invoke"
+  description = "Ghost Webhook Invocation Policy"
+  path        = "/service-role/"
+  policy      = data.aws_iam_policy_document.ghost-api-invoke.json
+}
+
+resource "aws_iam_role_policy_attachment" "ghost-api-invoke" {
+  role       = aws_iam_role.ghost.name
+  policy_arn = aws_iam_policy.ghost-api-invoke.arn
+}
+
 resource "aws_iam_role_policy_attachment" "ghost" {
   role       = aws_iam_role.ghost.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
@@ -72,6 +96,87 @@ resource "aws_iam_role_policy_attachment" "ghost" {
 
 resource "aws_cloudwatch_log_group" "ghost_cloudwatch" {
   name = "/ecs/ggjam-ghost"
+}
+
+resource "aws_s3_bucket" "ggjam-content" {
+  bucket        = var.content_s3_bucket
+  acl           = "public-read"
+  force_destroy = true
+
+  website {
+    index_document = "index.html"
+    error_document = "error.html"
+  }
+}
+
+data "aws_iam_policy_document" "ggjam-content-bucket-policy" {
+  statement {
+    actions = [
+      "s3:GetObject"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.ggjam-content.arn}/*"
+    ]
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "ggjam-content-bucket-policy" {
+  bucket = aws_s3_bucket.ggjam-content.id
+  policy = data.aws_iam_policy_document.ggjam-content-bucket-policy.json
+}
+
+resource "aws_iam_user" "ggjam-content" {
+  name = "ggjam-content"
+  path = "/system/"
+}
+
+resource "aws_iam_access_key" "ggjam-content" {
+  user = aws_iam_user.ggjam-content.name
+}
+
+data "aws_iam_policy_document" "ggjam-content" {
+  statement {
+    actions = [
+      "s3:ListBucket"
+    ]
+
+    resources = [
+      aws_s3_bucket.ggjam-content.arn
+    ]
+  }
+
+  statement {
+    actions = [
+      "s3:PutObject",
+      "s3:GetObject",
+      "s3:PutObjectVersionAcl",
+      "s3:DeleteObject",
+      "s3:PutObjectAcl"
+    ]
+
+    resources = [
+      "${aws_s3_bucket.ggjam-content.arn}/*"
+    ]
+  }
+}
+
+resource "aws_iam_policy" "ggjam-content" {
+  name        = "ggjam-content"
+  description = "Ghost Content Storage Policy"
+  path        = "/service-role/"
+  policy      = data.aws_iam_policy_document.ggjam-content.json
+}
+
+resource "aws_iam_policy_attachment" "ggjam-content" {
+  name       = "ggjam-content"
+  users      = [aws_iam_user.ggjam-content.name]
+  policy_arn = aws_iam_policy.ggjam-content.arn
 }
 
 resource "aws_ecs_task_definition" "ghost" {
@@ -83,12 +188,16 @@ resource "aws_ecs_task_definition" "ghost" {
   memory                   = "2048"
   cpu                      = "1024"
   container_definitions = templatefile("templates/ghost.json.tpl", {
+    image     = "wunderhund/ghost-s3:latest"
     host      = aws_db_instance.ghost.address
     port      = var.ghost_port
     user      = var.ghostdb_user
     pass      = var.ghostdb_pass
     log_group = aws_cloudwatch_log_group.ghost_cloudwatch.name
     region    = data.aws_region.current.name
+    bucket    = aws_s3_bucket.ggjam-content.bucket
+    accesskey = aws_iam_access_key.ggjam-content.id
+    secretkey = aws_iam_access_key.ggjam-content.secret
   })
 }
 
@@ -139,7 +248,10 @@ resource "aws_service_discovery_service" "ghost" {
   }
 }
 
-#output "ghost-ip" {
-#    value = aws_instance.jumpbox.private_ip
-#}
+output "content-location" {
+  value = aws_s3_bucket.ggjam-content.website_endpoint
+}
 
+output "content-bucket-name" {
+  value = aws_s3_bucket.ggjam-content.bucket
+}

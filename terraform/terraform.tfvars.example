@@ -1,7 +1,27 @@
+# Ghost Vars
 ghostdb_user = "ghost"
 ghostdb_pass = "ghostpass"
-jumpbox_access = ["0.0.0.0/0"]
-jumpbox_key = "<SSH Public Key"
-github_personal_token = "<github oauth token>"
-ghost_api_key = "<ghost api key>"
 ghost_port = "2368"
+ghost_api_key = "<ghost api key>" # Only available after setting up Ghost
+
+# Jumpbox Config
+jumpbox_access = ["0.0.0.0/0"] # IP Whitelist for SSH
+jumpbox_key = "<SSH Public Key>" # https://www.ssh.com/ssh/keygen/
+
+# Gatsby config
+# To use your own repo, change this:
+gatsby_repo = "https://github.com/TryGhost/gatsby-starter-ghost.git"
+
+# S3 Buckets
+website_s3_bucket = "ggjam.awesome.test" # Should match your intended website DNS name
+content_s3_bucket = "ggjam-content.awesome.test" # This bucket will contain your images, themes etc
+
+# GitHub Vars
+###
+# Only needed if you are using a private gatsby repo
+# Generate a personal github token: https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
+github_personal_token = "<github oauth token>"
+
+# Used with GH Enterprise only:
+github_secret_string = "swordfish" # Can be anything
+github_owner = "<github enterprise org>" 

@@ -28,7 +28,8 @@ variable "jumpbox_key" {
 }
 
 variable "github_personal_token" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "ghost_api_key" {
@@ -38,4 +39,26 @@ variable "ghost_api_key" {
 variable "ghost_port" {
   type    = string
   default = "2368"
+}
+
+variable "gatsby_repo" {
+  type    = string
+  default = "https://github.com/TryGhost/gatsby-starter-ghost.git"
+}
+
+variable "github_secret_string" {
+  type    = string
+  default = "swordfish"
+}
+
+variable "github_owner" {
+  type = string
+}
+
+variable "website_s3_bucket" {
+  type = string
+}
+
+variable "content_s3_bucket" {
+  type = string
 }

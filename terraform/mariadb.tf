@@ -14,7 +14,7 @@ resource "aws_db_instance" "ghost" {
 
   tags = merge(
     {
-      Name = "ggjam-igw"
+      Name = "ggjam-mariadb"
     },
     var.base_tags
   )

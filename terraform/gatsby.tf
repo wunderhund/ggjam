@@ -3,7 +3,7 @@ resource "aws_cloudwatch_log_group" "gatsby" {
 }
 
 resource "aws_s3_bucket" "ggjam-website" {
-  bucket        = "ggjam.craigabutler.com"
+  bucket        = var.website_s3_bucket
   acl           = "public-read"
   force_destroy = true
 
@@ -217,18 +217,24 @@ resource "aws_codebuild_project" "ggjam_frontend" {
   }
 
   source {
-    type                = "GITHUB"
-    location            = "https://github.com/wunderhund/gatsby-starter-ghost"
-    git_clone_depth     = 0
-    insecure_ssl        = false
-    report_build_status = false
-
-    buildspec = templatefile("templates/gatsby.yml.tpl", {
+    buildspec = templatefile("templates/gatsby-buildspec.yml.tpl", {
       artifacts_bucket = aws_s3_bucket.ggjam-website.bucket
       ghost_api_key    = var.ghost_api_key
       ghost_url        = "${aws_service_discovery_service.ghost.name}.${aws_service_discovery_private_dns_namespace.ggjam.name}"
       ghost_port       = var.ghost_port
+      gatsby_repo      = "https://${var.github_personal_token}@${trimprefix(var.gatsby_repo, "https://")}"
     })
+
+    type = "NO_SOURCE" # If using your own gatsby repo, comment out this line and un-comment the ones below!
+    #type                = "GITHUB"
+    #location            = var.gatsby_repo
+    #git_clone_depth     = 0
+    #insecure_ssl        = false
+    #report_build_status = false
+    #auth {
+    #  type     = "OAUTH"
+    #  resource = aws_codebuild_source_credential.ggjam_build.id
+    #}
   }
 
   vpc_config {
@@ -245,16 +251,43 @@ resource "aws_codebuild_project" "ggjam_frontend" {
   }
 }
 
-resource "aws_codebuild_webhook" "ggjam_build" {
-  project_name = aws_codebuild_project.ggjam_frontend.name
-  filter_group {
-    filter {
-      type    = "EVENT"
-      pattern = "PUSH"
-    }
-  }
-}
+# If you're using your own gatsby repo, un-comment the lines below!
+#resource "aws_codebuild_webhook" "ggjam_build" {
+#  project_name = aws_codebuild_project.ggjam_frontend.name
+#  filter_group {
+#    filter {
+#      type    = "EVENT"
+#      pattern = "PUSH"
+#    }
+#    
+#    filter {
+#      type    = "HEAD_REF"
+#      pattern = "master" # only trigger when this branch is updated
+#    }
+#  }
+#}
+#
+#resource "aws_codebuild_source_credential" "ggjam_build" {
+#  auth_type   = "PERSONAL_ACCESS_TOKEN"
+#  server_type = "GITHUB"
+#  token       = var.github_personal_token
+#}
 
-output "webhook-endpoint" {
-  value = aws_codebuild_webhook.ggjam_build.payload_url
+# For managing private repo webhooks with GitHub Enterprise.
+# Do not uncomment these lines if you are using a personal repo!
+#resource "github_repository_webhook" "backend_github_webhook" {
+#  repository = var.gatsby_repo
+#
+#  configuration {
+#    url          = aws_codebuild_webhook.ggjam_build.url
+#    content_type = "json"
+#    insecure_ssl = true
+#    secret       = var.github_secret_string
+#  }
+#
+#  events = ["push"]
+#}
+
+output "S3_Website" {
+  value = aws_s3_bucket.ggjam-website.website_endpoint
 }

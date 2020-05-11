@@ -1,7 +1,7 @@
 [
   {
     "name": "ghost",
-    "image": "ghost:3.13.1",
+    "image": "${image}",
     "cpu": 256,
     "memory": 512,
     "essential": true,
@@ -31,6 +31,26 @@
       {
         "name": "database__connection__database",
         "value": "ghostdb"
+      },
+      {
+        "name": "storage__active",
+        "value": "s3"
+      },
+      {
+        "name": "storage__s3__accessKeyId",
+        "value": "${accesskey}"
+      },
+      {
+        "name": "storage__s3__secretAccessKey",
+        "value": "${secretkey}"
+      },
+      {
+        "name": "storage__s3__region",
+        "value": "${region}"
+      },
+      {
+        "name": "storage__s3__bucket",
+        "value": "${bucket}"
       }
     ],
     "logConfiguration": {
