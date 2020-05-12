@@ -30,4 +30,4 @@ override.tf.json
 # example: *tfplan*
 
 # Generated files
-files/*
+terraform/files/lambda_function.zip

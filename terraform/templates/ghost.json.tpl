@@ -13,6 +13,10 @@
     ],
     "environment": [
       {
+        "name": "url",
+        "value": "http://ggjam.craigabutler.com"
+      },
+      {
         "name": "database__client",
         "value": "mysql"
       },

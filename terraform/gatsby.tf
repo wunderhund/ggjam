@@ -225,12 +225,15 @@ resource "aws_codebuild_project" "ggjam_frontend" {
       gatsby_repo      = "https://${var.github_personal_token}@${trimprefix(var.gatsby_repo, "https://")}"
     })
 
-    type = "NO_SOURCE" # If using your own gatsby repo, comment out this line and un-comment the ones below!
-    #type                = "GITHUB"
-    #location            = var.gatsby_repo
-    #git_clone_depth     = 0
-    #insecure_ssl        = false
-    #report_build_status = false
+    #type = "NO_SOURCE" # For a fully manual build, set this and comment out the rest of this block
+    type                = "GITHUB" #"GITHUB_ENTERPRISE" # If you are using a GH Enterprise repo
+    location            = var.gatsby_repo
+    git_clone_depth     = 0
+    insecure_ssl        = false
+    report_build_status = false
+    
+    # If using a private repo, you'll need OAUTH creds for GitHub.
+    # Uncomment this block and the aws_codebuild_source_credential one below.
     #auth {
     #  type     = "OAUTH"
     #  resource = aws_codebuild_source_credential.ggjam_build.id
@@ -251,27 +254,29 @@ resource "aws_codebuild_project" "ggjam_frontend" {
   }
 }
 
-# If you're using your own gatsby repo, un-comment the lines below!
-#resource "aws_codebuild_webhook" "ggjam_build" {
-#  project_name = aws_codebuild_project.ggjam_frontend.name
-#  filter_group {
-#    filter {
-#      type    = "EVENT"
-#      pattern = "PUSH"
-#    }
-#    
-#    filter {
-#      type    = "HEAD_REF"
-#      pattern = "master" # only trigger when this branch is updated
-#    }
-#  }
-#}
-#
+# This block needed for OAUTH access to GitHub. 
+# Be sure to uncomment the auth{} block in the project above and
+# add a personal access token to terraform.tfvars!
 #resource "aws_codebuild_source_credential" "ggjam_build" {
 #  auth_type   = "PERSONAL_ACCESS_TOKEN"
 #  server_type = "GITHUB"
 #  token       = var.github_personal_token
 #}
+
+resource "aws_codebuild_webhook" "ggjam_build" {
+  project_name = aws_codebuild_project.ggjam_frontend.name
+  filter_group {
+    filter {
+      type    = "EVENT"
+      pattern = "PUSH"
+    }
+    
+    filter {
+      type    = "HEAD_REF"
+      pattern = "master"
+    }
+  }
+}
 
 # For managing private repo webhooks with GitHub Enterprise.
 # Do not uncomment these lines if you are using a personal repo!
