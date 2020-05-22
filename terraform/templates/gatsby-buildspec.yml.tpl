@@ -5,6 +5,8 @@ phases:
     commands:
       - apt-get install -y git curl jq
       - npm install -g gatsby-cli
+      - npm i -g detect-port
+      - gatsby help
       - gatsby new gatsby-starter-ghost ${gatsby_repo}
       - cd gatsby-starter-ghost && yarn
       - contents="$(jq '.production.apiUrl = "http://${ghost_url}:${ghost_port}"' gatsby-starter-ghost/.ghost.json)" && echo $contents | jq '.' > gatsby-starter-ghost/.ghost.json
