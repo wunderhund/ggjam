@@ -3,7 +3,7 @@ resource "aws_cloudwatch_log_group" "gatsby" {
 }
 
 resource "aws_s3_bucket" "ggjam-website" {
-  bucket        = var.website_s3_bucket
+  bucket        = var.site_name
   acl           = "public-read"
   force_destroy = true
 
@@ -231,7 +231,7 @@ resource "aws_codebuild_project" "ggjam_frontend" {
     git_clone_depth     = 0
     insecure_ssl        = false
     report_build_status = false
-    
+
     # If using a private repo, you'll need OAUTH creds for GitHub.
     # Uncomment this block and the aws_codebuild_source_credential one below.
     #auth {
@@ -270,7 +270,7 @@ resource "aws_codebuild_webhook" "ggjam_build" {
       type    = "EVENT"
       pattern = "PUSH"
     }
-    
+
     filter {
       type    = "HEAD_REF"
       pattern = "master"

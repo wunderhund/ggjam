@@ -1,6 +1,13 @@
+# Site name
+# This will be used as the name of your website S3 bucket and to configure Ghost
+# It should match your actual DNS name for the site
+site_name  = "blog.craigabutler.com"
+
 # Ghost Vars
 ghostdb_user = "ghost"
 ghostdb_pass = "ghostpass"
+ghostdb_database = "ghostdb"
+ghostdb_client = "mysql"
 ghost_port = "2368"
 ghost_api_key = "<ghost api key>" # Only available after setting up Ghost
 
@@ -13,7 +20,6 @@ jumpbox_key = "<SSH Public Key>" # https://www.ssh.com/ssh/keygen/
 gatsby_repo = "https://github.com/TryGhost/gatsby-starter-ghost.git"
 
 # S3 Buckets
-website_s3_bucket = "ggjam.awesome.test" # Should match your intended website DNS name
 content_s3_bucket = "ggjam-content.awesome.test" # This bucket will contain your images, themes etc
 
 # GitHub Vars

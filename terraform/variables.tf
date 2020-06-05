@@ -10,12 +10,24 @@ variable "base_tags" {
   }
 }
 
+variable "site_name" {
+  type = string
+}
+
 variable "ghostdb_user" {
   type    = string
   default = "ghost"
 }
 
 variable "ghostdb_pass" {
+  type = string
+}
+
+variable "ghostdb_database" {
+  type = string
+}
+
+variable "ghostdb_client" {
   type = string
 }
 
@@ -52,11 +64,8 @@ variable "github_secret_string" {
 }
 
 variable "github_owner" {
-  type = string
-}
-
-variable "website_s3_bucket" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "content_s3_bucket" {

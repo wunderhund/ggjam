@@ -188,17 +188,27 @@ resource "aws_ecs_task_definition" "ghost" {
   memory                   = "2048"
   cpu                      = "1024"
   container_definitions = templatefile("templates/ghost.json.tpl", {
-    image     = "wunderhund/ghost-s3:latest"
-    host      = aws_db_instance.ghost.address
-    port      = var.ghost_port
-    user      = var.ghostdb_user
-    pass      = var.ghostdb_pass
-    log_group = aws_cloudwatch_log_group.ghost_cloudwatch.name
-    region    = data.aws_region.current.name
-    bucket    = aws_s3_bucket.ggjam-content.bucket
-    accesskey = aws_iam_access_key.ggjam-content.id
-    secretkey = aws_iam_access_key.ggjam-content.secret
+    image          = "wunderhund/ghost-s3:latest"
+    site_name      = var.site_name
+    port           = var.ghost_port
+    db_host        = aws_db_instance.ghost.address
+    db_client      = var.ghostdb_client
+    db_user        = var.ghostdb_user
+    db_pass        = var.ghostdb_pass
+    db_database    = var.ghostdb_database
+    log_group      = aws_cloudwatch_log_group.ghost_cloudwatch.name
+    region         = data.aws_region.current.name
+    content_bucket = aws_s3_bucket.ggjam-content.bucket
+    accesskey      = aws_iam_access_key.ggjam-content.id
+    secretkey      = aws_iam_access_key.ggjam-content.secret
   })
+  
+  tags = merge(
+    {
+      Name = "ghost"
+    },
+    var.base_tags
+  )
 }
 
 resource "aws_ecs_service" "ghost" {

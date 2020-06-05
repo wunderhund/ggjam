@@ -14,27 +14,27 @@
     "environment": [
       {
         "name": "url",
-        "value": "http://ggjam.craigabutler.com"
+        "value": "http://${site_name}"
       },
       {
         "name": "database__client",
-        "value": "mysql"
+        "value": "${db_client}"
       },
       {
         "name": "database__connection__host",
-        "value": "${host}"
+        "value": "${db_host}"
       },
       {
         "name": "database__connection__user",
-        "value": "${user}"
+        "value": "${db_user}"
       },
       {
         "name": "database__connection__password",
-        "value": "${pass}"
+        "value": "${db_pass}"
       },
       {
         "name": "database__connection__database",
-        "value": "ghostdb"
+        "value": "${db_database}"
       },
       {
         "name": "storage__active",
@@ -54,7 +54,7 @@
       },
       {
         "name": "storage__s3__bucket",
-        "value": "${bucket}"
+        "value": "${content_bucket}"
       }
     ],
     "logConfiguration": {
