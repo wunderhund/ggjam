@@ -292,7 +292,3 @@ resource "aws_codebuild_webhook" "ggjam_build" {
 #
 #  events = ["push"]
 #}
-
-output "S3_Website" {
-  value = aws_s3_bucket.ggjam-website.website_endpoint
-}

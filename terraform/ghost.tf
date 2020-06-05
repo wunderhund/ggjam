@@ -258,10 +258,3 @@ resource "aws_service_discovery_service" "ghost" {
   }
 }
 
-output "content-location" {
-  value = aws_s3_bucket.ggjam-content.website_endpoint
-}
-
-output "content-bucket-name" {
-  value = aws_s3_bucket.ggjam-content.bucket
-}

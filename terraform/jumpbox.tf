@@ -57,6 +57,3 @@ resource "aws_instance" "jumpbox" {
   )
 }
 
-output "jumpbox-pulic-ip" {
-  value = aws_instance.jumpbox.public_ip
-}
