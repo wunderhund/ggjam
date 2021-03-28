@@ -273,7 +273,7 @@ resource "aws_codebuild_webhook" "ggjam_build" {
 
     filter {
       type    = "HEAD_REF"
-      pattern = "master"
+      pattern = "main"
     }
   }
 }
