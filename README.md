@@ -31,9 +31,9 @@ This diagram illustrates the user journeys of three different types of stakehold
 * **Developers** push code changes to GitHub, which trigger the Codebuild pipeline and redeploy the site. 
 
 ### Repositories
-* [GGJam](https://github.com/wunderhund/ggjam): 
-* [GGJam-frontend](https://github.com/wunderhund/ggjam-frontend):
-* [GGJam-backend](https://github.com/wunderhund/ggjam-backend): 
+* [GGJam](https://github.com/wunderhund/ggjam)
+* [GGJam-frontend](https://github.com/wunderhund/ggjam-frontend)
+* [GGJam-backend](https://github.com/wunderhund/ggjam-backend)
 
 ### Files
 * `terraform.tfvars`: Variable values file, which is ignored by git to allow secrets to be stored in it locally. Copy the `terraform.tfvars.example` file to create your own `terraform.tfvars` file and customize it to your needs.
@@ -89,7 +89,7 @@ Although the Terraform resource dependency mapping is pretty good, if you want t
 1. `webhook.tf`
 
 ### Acknowledgements:
-[Gatsby](https://www.gatsbyjs.com/)
-[Ghost](https://ghost.org/)
-[gatsby-starter-ghost](https://github.com/TryGhost/gatsby-starter-ghost.git)
-Lambda webhook inspired by: https://www.linkedin.com/pulse/use-aws-codecommit-lambda-trigger-codebuild-container-trevor-sullivan/
+* [Gatsby](https://www.gatsbyjs.com/)
+* [Ghost](https://ghost.org/)
+* [gatsby-starter-ghost](https://github.com/TryGhost/gatsby-starter-ghost.git)
+* Lambda webhook inspired by: https://www.linkedin.com/pulse/use-aws-codecommit-lambda-trigger-codebuild-container-trevor-sullivan/
