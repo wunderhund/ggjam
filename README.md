@@ -31,9 +31,9 @@ This diagram illustrates the user journeys of three different types of stakehold
 * **Developers** push code changes to GitHub, which trigger the Codebuild pipeline and redeploy the site. 
 
 ### Repositories
-* [GGJam](https://github.com/wunderhund/ggjam)
-* [GGJam-frontend](https://github.com/wunderhund/ggjam-frontend)
-* [GGJam-backend](https://github.com/wunderhund/ggjam-backend)
+* [GGJam](https://github.com/wunderhund/ggjam): This repo, containing the Infrastructure-as-Code for this Ghost/Gatsby Jamstack.
+* [GGJam-frontend](https://github.com/wunderhund/ggjam-frontend): A fork of [gatsby-starter-ghost](https://github.com/TryGhost/gatsby-starter-ghost) with some style customizations for my personal blog. 
+* [GGJam-backend](https://github.com/wunderhund/ggjam-backend): Contains the Dockerfile source for [wunderhund/ghost-s3](https://hub.docker.com/r/wunderhund/ghost-s3), as well as a docker-compose file for running the backend container locally for testing or use with the `minimal` branch workflow.
 
 ### Files
 * `terraform.tfvars`: Variable values file, which is ignored by git to allow secrets to be stored in it locally. Copy the `terraform.tfvars.example` file to create your own `terraform.tfvars` file and customize it to your needs.
