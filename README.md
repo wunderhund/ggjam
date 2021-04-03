@@ -1,5 +1,5 @@
 # GGJam - A Ghost/Gatsby Jamstack
-This repo contains the AWS infrastructure, written in Terraform, for a Ghost/Gatsby Jamstack. A [Jamstack](https://jamstack.org) is an architecture for hosting static websites backed by a user-friendly content-management system. In this case, the static website generator I used is [Gatsby](https://www.gatsbyjs.com/), a React-based open-source framework for creating websites and apps. The backend CMS is [Ghost](https://ghost.org), a Node.js-based open-source content management system.
+This repo contains the AWS infrastructure, written in Terraform v0.12.24, for a Ghost/Gatsby Jamstack. A [Jamstack](https://jamstack.org) is an architecture for hosting static websites backed by a user-friendly content-management system. In this case, the static website generator I used is [Gatsby](https://www.gatsbyjs.com/), a React-based open-source framework for creating websites and apps. The backend CMS is [Ghost](https://ghost.org), a Node.js-based open-source content management system.
 
 ## Why Jamstack?
 
