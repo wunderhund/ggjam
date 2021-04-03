@@ -234,10 +234,10 @@ resource "aws_codebuild_project" "ggjam_frontend" {
 
     # If using a private repo, you'll need OAUTH creds for GitHub.
     # Uncomment this block and the aws_codebuild_source_credential one below.
-    #auth {
-    #  type     = "OAUTH"
-    #  resource = aws_codebuild_source_credential.ggjam_build.id
-    #}
+    auth {
+      type     = "OAUTH"
+      resource = aws_codebuild_source_credential.ggjam_build.id
+    }
   }
 
   vpc_config {
@@ -257,11 +257,11 @@ resource "aws_codebuild_project" "ggjam_frontend" {
 # This block needed for OAUTH access to GitHub. 
 # Be sure to uncomment the auth{} block in the project above and
 # add a personal access token to terraform.tfvars!
-#resource "aws_codebuild_source_credential" "ggjam_build" {
-#  auth_type   = "PERSONAL_ACCESS_TOKEN"
-#  server_type = "GITHUB"
-#  token       = var.github_personal_token
-#}
+resource "aws_codebuild_source_credential" "ggjam_build" {
+  auth_type   = "PERSONAL_ACCESS_TOKEN"
+  server_type = "GITHUB"
+  token       = var.github_personal_token
+}
 
 resource "aws_codebuild_webhook" "ggjam_build" {
   project_name = aws_codebuild_project.ggjam_frontend.name
@@ -301,17 +301,17 @@ locals {
 }
 
 resource "aws_cloudfront_distribution" "ggjam_distribution" {
-  enabled = true
-  is_ipv6_enabled = true
-  price_class = "PriceClass_100"
+  enabled             = true
+  is_ipv6_enabled     = true
+  price_class         = "PriceClass_100"
   default_root_object = "index.html"
 
   aliases = [var.site_name]
-  
+
   origin {
     domain_name = aws_s3_bucket.ggjam-website.website_endpoint
     origin_id   = local.s3_origin_id
-    
+
     custom_origin_config {
       http_port                = 80
       https_port               = 443
@@ -348,8 +348,8 @@ resource "aws_cloudfront_distribution" "ggjam_distribution" {
   }
 
   viewer_certificate {
-    acm_certificate_arn = "arn:aws:acm:us-east-1:925412914118:certificate/d2e793e8-535e-420d-a1d6-90bd350a7f6e"
+    acm_certificate_arn      = "arn:aws:acm:us-east-1:925412914118:certificate/d2e793e8-535e-420d-a1d6-90bd350a7f6e"
     minimum_protocol_version = "TLSv1.2_2018"
-    ssl_support_method = "sni-only"
+    ssl_support_method       = "sni-only"
   }
 }

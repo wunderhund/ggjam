@@ -202,7 +202,7 @@ resource "aws_ecs_task_definition" "ghost" {
     accesskey      = aws_iam_access_key.ggjam-content.id
     secretkey      = aws_iam_access_key.ggjam-content.secret
   })
-  
+
   tags = merge(
     {
       Name = "ghost"

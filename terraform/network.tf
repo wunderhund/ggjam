@@ -92,7 +92,7 @@ resource "aws_nat_gateway" "ngw" {
 resource "aws_subnet" "private-a" {
   vpc_id     = aws_vpc.ggjam.id
   cidr_block = "10.0.3.0/24"
-  #availability_zone = "${data.aws_region.current.name}a"
+  availability_zone = "${data.aws_region.current.name}c"
 
   tags = merge(
     {
@@ -105,7 +105,7 @@ resource "aws_subnet" "private-a" {
 resource "aws_subnet" "private-b" {
   vpc_id     = aws_vpc.ggjam.id
   cidr_block = "10.0.4.0/24"
-  #availability_zone = "${data.aws_region.current.name}b"
+  availability_zone = "${data.aws_region.current.name}b"
 
   tags = merge(
     {

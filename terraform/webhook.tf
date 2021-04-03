@@ -78,7 +78,7 @@ resource "aws_security_group" "ghost-vpc-endpoint" {
 
 resource "aws_vpc_endpoint" "ghost-vpc-endpoint" {
   vpc_id              = aws_vpc.ggjam.id
-  service_name        = "com.amazonaws.us-west-2.execute-api"
+  service_name        = "com.amazonaws.${var.region}.execute-api"
   auto_accept         = true
   private_dns_enabled = true
   vpc_endpoint_type   = "Interface"

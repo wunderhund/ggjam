@@ -1,28 +1,41 @@
-# Site name
-# This will be used as the name of your website S3 bucket and to configure Ghost
-# It should match your actual DNS name for the site
-site_name  = "blog.craigabutler.com"
+# Profile - AWS Profile to use in ~/.aws/credentials file
+# See https://registry.terraform.io/providers/hashicorp/aws/latest/docs
+profile = "ggjam"
 
-# Ghost Vars
-ghostdb_user = "ghost"
-ghostdb_pass = "ghostpass"
+# Region - AWS Region to build infrastructure in
+# See https://aws.amazon.com/about-aws/global-infrastructure/regions_az/
+region = "us-west-2"
+
+# Base Tags - Tags that will be applied to every resource that supports tags
+base_tags = {
+  "project" = "ggjam"
+  "owner"   = "me"
+}
+
+# Site name - this will be used as the name of your website S3 bucket and 
+# to configure Ghost. It should match your actual DNS name for the site!
+site_name = "myblog.awesome.test"
+
+# Content S3 Bucket
+content_s3_bucket = "ggjam-content.awesome.test" # This bucket will contain your images, themes etc
+
+# Ghost Variables
+ghostdb_user     = "ghost"
+ghostdb_pass     = "ghostpass"
 ghostdb_database = "ghostdb"
-ghostdb_client = "mysql"
-ghost_port = "2368"
-ghost_api_key = "<ghost api key>" # Only available after setting up Ghost
+ghostdb_client   = "mysql"
+ghost_port       = "2368"
+ghost_api_key    = "<ghost api key>" # Only available after setting up Ghost
 
-# Jumpbox Config
-jumpbox_access = ["0.0.0.0/0"] # IP Whitelist for SSH
-jumpbox_key = "<SSH Public Key>" # https://www.ssh.com/ssh/keygen/
+# Jumpbox Configuration
+jumpbox_access = ["0.0.0.0/0"]      # IP Allowlist for SSH
+jumpbox_key    = "<SSH Public Key>" # https://www.ssh.com/ssh/keygen/
 
-# Gatsby config
+# Gatsby Configuration - Uses public gatsby-starter-ghost by default.
 # To use your own repo, change this:
 gatsby_repo = "https://github.com/TryGhost/gatsby-starter-ghost.git"
 
-# S3 Buckets
-content_s3_bucket = "ggjam-content.awesome.test" # This bucket will contain your images, themes etc
-
-# GitHub Vars
+# GitHub Variables
 ###
 # Only needed if you are using a private gatsby repo
 # Generate a personal github token: https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line
@@ -30,4 +43,4 @@ github_personal_token = "<github oauth token>"
 
 # Used with GH Enterprise only:
 github_secret_string = "swordfish" # Can be anything
-github_owner = "<github enterprise org>" 
+github_owner         = "<github enterprise org>"
