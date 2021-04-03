@@ -9,7 +9,3 @@ output "content-location" {
 output "content-bucket-name" {
   value = aws_s3_bucket.ggjam-content.bucket
 }
-
-#output "jumpbox-pulic-ip" {
-#  value = aws_instance.jumpbox.public_ip
-#}
